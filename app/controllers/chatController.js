@@ -11,13 +11,24 @@
     $firebaseArray
   ) {
     $scope.post = "";
-
     var ref = firebase
       .database()
       .ref()
       .child("post");
     $scope.posts = $firebaseArray(ref);
 
+
+
+
+
+
+    $scope.users = "";
+    var ref = firebase
+      .database()
+      .ref()
+      .child("users");
+    $scope.users = $firebaseArray(ref);
+  
     $scope.postData = () => {
       $scope.date = new Date();
 
@@ -36,5 +47,20 @@
     $scope.sendPost = event => {
       if (event.keyCode === 13) $scope.postData();
     };
+
+
+
+    
+      
+    $scope.startContact = user_id=>{
+
+          alert(user_id)
+
+
+    }
+
+
+
+
   }
 })();

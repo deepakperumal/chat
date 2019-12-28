@@ -1,11 +1,21 @@
 (function() {
-  angular
-    .module("app")
-    .controller("registrationController", MainController);
+  angular.module("app").controller("registrationController", MainController);
 
-  MainController.$inject = ["$scope", "$firebaseAuth","$state","alertService"];
+  MainController.$inject = [
+    "$scope",
+    "$firebaseAuth",
+    "$state",
+    "alertService",
+    "$firebaseArray"
+  ];
 
-  function MainController($scope, $firebaseAuth, $state,alertService) {
+  function MainController(
+    $scope,
+    $firebaseAuth,
+    $state,
+    alertService,
+    $firebaseArray
+  ) {
     $scope.reg = {};
     $scope.submitForm = () => {
       var username = $scope.reg.email;
@@ -15,7 +25,19 @@
         var auth = $firebaseAuth();
         auth
           .$createUserWithEmailAndPassword(username, password)
-          .then(function() {
+          .then(function(data) {
+            var ref = firebase
+              .database()
+              .ref()
+              .child("users");
+            $scope.posts = $firebaseArray(ref);
+            $scope.posts.$add({
+              name: $scope.reg.name,
+              email: $scope.reg.email,
+              dob: $scope.reg.dob,
+              user_id:data.user.uid
+            });
+
             alertService.sendAlert(
               "Registration successful",
               "User has been created",
@@ -29,11 +51,12 @@
             $scope.errMsg = true;
             $scope.errorMessage = error.message;
           });
-      }
-
-      else
-      alertService.sendAlert("Notice",'Please fill the email and password', "red");
-
+      } else
+        alertService.sendAlert(
+          "Notice",
+          "Please fill the email and password",
+          "red"
+        );
     };
   }
 })();

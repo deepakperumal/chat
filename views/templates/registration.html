@@ -6,7 +6,7 @@
         </div>
   
         <div class="col-md-6">
-          <input class="form-elements" placeholder="Name" />
+          <input class="form-elements" placeholder="Name"  ng-model="reg.name"/>
           <input class="form-elements" placeholder="Email" ng-model="reg.email" />
           <input
             class="form-elements"
@@ -14,7 +14,7 @@
             placeholder="Password"
             ng-model="reg.password"
           />
-          <input class="form-elements" placeholder="DOB" />
+          <input type="date"  class="form-elements date-inp" placeholder="DOB"  ng-model="reg.dob"/>
   
           <button class="reg-btn" ng-click="submitForm()">Register</button>
         </div>
