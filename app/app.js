@@ -1,92 +1,45 @@
-/**
- * 
- * AngularJS Boilerplate
- * @description           Description
- * @author                Jozef Butko // www.jozefbutko.com/resume
- * @url                   www.jozefbutko.com
- * @version               1.1.7
- * @date                  March 2015
- * @license               MIT
- * 
- */
-;(function() {
+(function() {
+  angular.module("app", ["ui.router","cp.ngConfirm","firebase"]).config(config);
 
+  config.$inject = ["$stateProvider", "$httpProvider", "$locationProvider"];
 
-  /**
-   * Definition of the main app module and its dependencies
-   */
-  angular
-    .module('boilerplate', [
-      'ngRoute'
-    ])
-    .config(config);
-
-  // safe dependency injection
-  // this prevents minification issues
-  config.$inject = ['$routeProvider', '$locationProvider', '$httpProvider', '$compileProvider'];
-
-  /**
-   * App routing
-   *
-   * You can leave it here in the config section or take it out
-   * into separate file
-   * 
-   */
-  function config($routeProvider, $locationProvider, $httpProvider, $compileProvider) {
-
+  function config($stateProvider, $httpProvider, $locationProvider) {
     $locationProvider.html5Mode(false);
 
-    // routes
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/home.html',
-        controller: 'MainController',
-        controllerAs: 'main'
+    $stateProvider
+      .state("login", {
+        url: "/",
+        templateUrl: "views/templates/login.html",
+        controller: "loginController"
       })
-      .when('/contact', {
-        templateUrl: 'views/contact.html',
-        controller: 'MainController',
-        controllerAs: 'main'
+      .state("register", {
+        url: "/register",
+        templateUrl: "views/templates/registration.html",
+        controller: "registrationController"
       })
-      .when('/setup', {
-        templateUrl: 'views/setup.html',
-        controller: 'MainController',
-        controllerAs: 'main'
-      })
-      .otherwise({
-        redirectTo: '/'
+      .state("chat", {
+        url: "/chat",
+        templateUrl: "views/templates/chat.html",
+        controller: "chatController"
       });
 
-    $httpProvider.interceptors.push('authInterceptor');
-
+    $httpProvider.interceptors.push("authInterceptor");
   }
 
+  angular.module("app").factory("authInterceptor", authInterceptor);
 
-  /**
-   * You can intercept any request or response inside authInterceptor
-   * or handle what should happend on 40x, 50x errors
-   * 
-   */
-  angular
-    .module('boilerplate')
-    .factory('authInterceptor', authInterceptor);
-
-  authInterceptor.$inject = ['$rootScope', '$q', 'LocalStorage', '$location'];
+  authInterceptor.$inject = ["$rootScope", "$q", "LocalStorage", "$location"];
 
   function authInterceptor($rootScope, $q, LocalStorage, $location) {
-
     return {
-
-      // intercept every request
       request: function(config) {
         config.headers = config.headers || {};
         return config;
       },
 
-      // Catch 404 errors
       responseError: function(response) {
         if (response.status === 404) {
-          $location.path('/');
+          $location.path("/");
           return $q.reject(response);
         } else {
           return $q.reject(response);
@@ -95,21 +48,28 @@
     };
   }
 
+  angular.module("app").run(run);
 
-  /**
-   * Run block
-   */
-  angular
-    .module('boilerplate')
-    .run(run);
-
-  run.$inject = ['$rootScope', '$location'];
+  run.$inject = ["$rootScope", "$location"];
 
   function run($rootScope, $location) {
 
-    // put here everything that you need to run on page load
+    var firebaseConfig = {
+      apiKey: "AIzaSyBdKXoCtI3fULi0s7V0WtFRMzcm_wTl5J0",
+      authDomain: "webapp-5d40f.firebaseapp.com",
+      databaseURL: "https://webapp-5d40f.firebaseio.com",
+      projectId: "webapp-5d40f",
+      storageBucket: "webapp-5d40f.appspot.com",
+      messagingSenderId: "963884867488",
+      appId: "1:963884867488:web:4a46036404d8df4b6d4ec5",
+      measurementId: "G-5NTNQ3T04E"
+    };
+    console.log(firebase);
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    firebase.auth();
+    firebase.database();
+
 
   }
-
-
 })();

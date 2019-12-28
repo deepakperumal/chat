@@ -4,7 +4,7 @@
  * @date    March 2015
  * @license MIT
  *
- * AngularJS Boilerplate: Build, watch and other useful tasks
+ * AngularJS app: Build, watch and other useful tasks
  *
  * The build process consists of following steps:
  * 1. clean /_build folder
@@ -205,7 +205,7 @@ gulp.task('templates', function() {
     ])
     .pipe($.minifyHtml())
     .pipe($.angularTemplatecache({
-      module: 'boilerplate'
+      module: 'app'
     }))
     .pipe(gulp.dest('_build/js'));
 });

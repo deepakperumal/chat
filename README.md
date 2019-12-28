@@ -1,9 +1,9 @@
 ## Disclaimer:
-For updated version of AngularJS-Boilerplate please use this one: https://github.com/jbutko/ExpressJS-Socket.IO-AngularJS-Boilerplate/tree/master/client
+For updated version of AngularJS-app please use this one: https://github.com/jbutko/ExpressJS-Socket.IO-AngularJS-app/tree/master/client
 It's component based, based on Angular v1.6.1 and as routing library is used Angular UI Router v1.
 
-# AngularJS-Boilerplate
-Simple AngularJS Boilerplate to kick start your new project with SASS support and Gulp watch/build tasks
+# AngularJS-app
+Simple AngularJS app to kick start your new project with SASS support and Gulp watch/build tasks
 
 # Features
 * SASS support including sourceMaps
@@ -20,13 +20,13 @@ Simple AngularJS Boilerplate to kick start your new project with SASS support an
 
 ## Download
 ```bash
-bower install angularjs-boilerplate
+bower install angularjs-app
 ```
 
 or
 
 ```bash
-git clone https://github.com/jbutko/AngularJS-Boilerplate.git
+git clone https://github.com/jbutko/AngularJS-app.git
 ```
 
 ## 1. Setup

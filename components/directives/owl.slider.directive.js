@@ -26,7 +26,7 @@
    * 
    */
   angular
-    .module('boilerplate')
+    .module('app')
     .directive('myslider', slider);
 
   function slider() {

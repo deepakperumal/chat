@@ -34,7 +34,7 @@
 
 
   angular
-    .module('boilerplate')
+    .module('app')
     .factory('QueryService', [
       '$http', '$q', 'CONSTANTS', QueryService
     ]);
