@@ -5,12 +5,12 @@
     "$scope",
     "$firebaseAuth",
     "$state",
-    "alertService"
+    "alertService",
+    "storageService"
   ];
 
-  function MainController($scope, $firebaseAuth, $state, alertService) {
+  function MainController($scope, $firebaseAuth, $state, alertService,storageService) {
     $scope.user = {};
-
     $scope.signIn = () => {
       let email = $scope.user.email;
       let password = $scope.user.password;
@@ -19,17 +19,13 @@
         auth
           .$signInWithEmailAndPassword(email, password)
           .then(function(data) {
+            storageService.setItem("user_id", data.user.uid)
             $state.go("chat");
-            alertService.sendAlert(
-              "Login Successful",
-              "You are be redirected to chat section",
-              "green"
-            );
           })
           .catch(function(error) {
             alertService.sendAlert("Notice", error.message, "red");
           });
-      else alertService.sendAlert("Notice", "Fields cannot be empty", "red");
+          else alertService.sendAlert("Notice", "Fields cannot be empty", "red");
     };
   }
 })();

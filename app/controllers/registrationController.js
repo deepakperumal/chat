@@ -26,16 +26,13 @@
         auth
           .$createUserWithEmailAndPassword(username, password)
           .then(function(data) {
-            var ref = firebase
-              .database()
-              .ref()
-              .child("users");
-            $scope.posts = $firebaseArray(ref);
-            $scope.posts.$add({
+            var ref = firebase.firestore();
+
+            ref.collection("users").add({
               name: $scope.reg.name,
               email: $scope.reg.email,
               dob: $scope.reg.dob,
-              user_id:data.user.uid
+              user_id: data.user.uid
             });
 
             alertService.sendAlert(

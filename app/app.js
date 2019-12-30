@@ -28,9 +28,9 @@
 
   angular.module("app").factory("authInterceptor", authInterceptor);
 
-  authInterceptor.$inject = ["$rootScope", "$q", "LocalStorage", "$location"];
+  authInterceptor.$inject = ["$q", "$location"];
 
-  function authInterceptor($rootScope, $q, LocalStorage, $location) {
+  function authInterceptor($q,$location) {
     return {
       request: function(config) {
         config.headers = config.headers || {};
@@ -68,6 +68,7 @@
     firebase.analytics();
     firebase.auth();
     firebase.database();
+    firebase.firestore();
 
 
   }

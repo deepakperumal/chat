@@ -1,66 +1,68 @@
 (function() {
   angular.module("app").controller("chatController", MainController);
 
-  MainController.$inject = [
-    "$scope",
-    "$firebaseArray"
-  ];
+  MainController.$inject = ["$scope", "storageService"];
 
-  function MainController(
-    $scope,
-    $firebaseArray
-  ) {
-    $scope.post = "";
-    var ref = firebase
-      .database()
-      .ref()
-      .child("post");
-    $scope.posts = $firebaseArray(ref);
+  function MainController($scope, storageService) {
+    $scope.sender = storageService.getItem("user_id");
+    var db = firebase.firestore();
+    $scope.receiver = "";
+    /* Watch users data  */
 
+    db.collection("users").onSnapshot(function(querySnapshot) {
+      $scope.users = [];
+      querySnapshot.forEach(function(doc) {
+        $scope.users.push(doc.data());
+      });
+      $scope.$apply(function() {
+        $scope.users = $scope.users;
+      });
+    });
 
+    /* Watch post data  */
 
+    $scope.$watch("receiver", function() {
+      db.collection("posts")
+        .where("sender", "in", [$scope.sender, $scope.receiver])
+        .orderBy("timestamp")
+        .onSnapshot(function(querySnapshot) {
+          $scope.posts = [];
+          querySnapshot.forEach(function(doc) {
+            if (
+              doc.data().sender == $scope.sender &&
+              doc.data().receiver != $scope.receiver
+            )
+              $scope.posts.push({});
+            else $scope.posts.push(doc.data());
+          });
+          $scope.$apply(function() {
+            $scope.posts = $scope.posts;
+          });
 
+          setTimeout(function() {
+            var elem = document.getElementById("conversation");
+            elem.scrollTop = elem.scrollHeight;
+          }, 200);
+        });
+    });
 
-
-    $scope.users = "";
-    var ref = firebase
-      .database()
-      .ref()
-      .child("users");
-    $scope.users = $firebaseArray(ref);
-  
     $scope.postData = () => {
-      $scope.date = new Date();
-
-      $scope.posts
-        .$add({
-          title: "firstUser",
+      if ($scope.receiver && $scope.post.trim())
+        db.collection("posts").add({
+          sender: $scope.sender,
+          receiver: $scope.receiver,
           post: $scope.post,
-          data: 12
-        })
-        .then(
-          function(data) {},
-          function(error) {}
-        );
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      $scope.post = "";
     };
 
     $scope.sendPost = event => {
       if (event.keyCode === 13) $scope.postData();
     };
 
-
-
-    
-      
-    $scope.startContact = user_id=>{
-
-          alert(user_id)
-
-
-    }
-
-
-
-
+    $scope.startContact = user_id => {
+      $scope.receiver = user_id;
+    };
   }
 })();

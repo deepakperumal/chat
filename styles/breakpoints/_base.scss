@@ -816,8 +816,16 @@ h5 {
 .message-time {
   font-size: 12px;
   text-align: right;
-  color: #9a9a9a;
+  color: #8BC34A;
+  margin-bottom: 6px;
   margin-top: -4px;
+}
+
+
+
+.receiver .message-time
+{
+  color: #000;
 }
 
 .receiver {
@@ -828,7 +836,9 @@ h5 {
   border-radius: 6px;
   background: #fff;
 }
-
+.container{
+  max-width: 1404px !important;
+}
 .sender {
   float: right;
   width: 213px !important;
@@ -842,7 +852,7 @@ h5 {
   word-wrap: break-word;
   margin-bottom: 8px;
   margin-right: 17px;
-  max-height: 43px;
+
 }
 
 .receiver {
@@ -856,7 +866,7 @@ h5 {
   word-wrap: break-word;
   margin-bottom: 8px;
   margin-left: 17px;
-  max-height: 43px;
+
 }
 
 /*Reply*/
@@ -935,7 +945,7 @@ h5 {
 }
 
 .user-default {
-  width: 16%;
+  width: 12%;
   float: left;
   margin-left: 5px;
   margin-right: 15px;
