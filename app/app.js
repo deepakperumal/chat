@@ -20,7 +20,7 @@
       .state("chat", {
         url: "/chat",
         templateUrl: "views/templates/chat.html",
-        controller: "chatController"
+        controller: "chatController",
       });
 
     $httpProvider.interceptors.push("authInterceptor");

@@ -1,10 +1,13 @@
 (function() {
   angular.module("app").controller("chatController", MainController);
 
-  MainController.$inject = ["$scope", "storageService"];
+  MainController.$inject = ["$scope", "storageService", "$state"];
 
-  function MainController($scope, storageService) {
+  function MainController($scope, storageService, $state) {
     $scope.sender = storageService.getItem("user_id");
+
+    if (!$scope.sender) $state.go("login");
+
     var db = firebase.firestore();
     $scope.receiver = "";
     /* Watch users data  */
@@ -47,12 +50,28 @@
     });
 
     $scope.postData = () => {
+      
+      let current_datetime = new Date();
+      let formatted_date =
+        current_datetime.getFullYear() +
+        "-" +
+        (current_datetime.getMonth() + 1) +
+        "-" +
+        current_datetime.getDate() +
+        " " +
+        current_datetime.getHours() +
+        ":" +
+        current_datetime.getMinutes() +
+        ":" +
+        current_datetime.getSeconds();
+
       if ($scope.receiver && $scope.post.trim())
         db.collection("posts").add({
           sender: $scope.sender,
           receiver: $scope.receiver,
           post: $scope.post,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          currentDate: formatted_date
         });
       $scope.post = "";
     };
@@ -63,6 +82,11 @@
 
     $scope.startContact = user_id => {
       $scope.receiver = user_id;
+    };
+
+    $scope.signOut = () => {
+      storageService.setItem("user_id", "");
+      $state.go("login");
     };
   }
 })();

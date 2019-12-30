@@ -519,12 +519,13 @@ h5 {
 }
 
 .heading {
-  padding: 10px 16px 10px 15px;
-  margin: 0;
-  height: 60px;
-  width: 100%;
-  background-color: #000;
-  z-index: 1000;
+    margin: 0;
+    height: 60px;
+    width: 100%;
+    background-color: #c1c1c1;
+    z-index: 1000;
+    border-bottom: 1px solid grey;
+    margin-left: -2px !important;
 }
 
 .heading-avatar {
@@ -870,7 +871,18 @@ h5 {
 }
 
 /*Reply*/
-
+ .sign-out {
+  position: absolute;
+  left: 87%;
+  margin-top: 12px;
+  font-size: 13px;
+  padding: 6px;
+  width: 85px;
+  background: #fbfdff;
+  border: 1px solid #315d78;
+  cursor: pointer;
+  letter-spacing: 1.4px;
+}
 .reply {
   height: 60px;
   width: 100%;

@@ -256,8 +256,13 @@
     <!-- Conversation Start -->
     <div class="col-sm-9 conversation">
       <!-- Heading -->
+      <button class="sign-out" ng-click="signOut()">Log Out</button>
       <div class="row heading">
+
+    
+
         <div class="col-sm-2 col-md-1 col-3 heading-avatar">
+    
           <div class="heading-avatar-icon">
             <!--<img src="http://shurl.esy.es/y" />-->
           </div>
@@ -281,7 +286,7 @@
               {{post.post}}
             </div>
             <span class="message-time pull-right">
-              some date
+              {{post.currentDate}}
             </span>
           </div>
         </div>
