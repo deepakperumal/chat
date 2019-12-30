@@ -870,6 +870,49 @@ h5 {
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+#conversation::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+#conversation::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+#conversation::-webkit-scrollbar-thumb {
+  background: #254b62; 
+}
+
+/* Handle on hover */
+#conversation::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*Reply*/
  .sign-out {
   position: absolute;
