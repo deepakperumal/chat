@@ -9,7 +9,6 @@
     var db = firebase.firestore();
     $scope.receiver = "";
 
-
     /* Watch users data  */
 
     db.collection("users").onSnapshot(function(querySnapshot) {
@@ -30,10 +29,13 @@
         .onSnapshot(function(querySnapshot) {
           $scope.posts = [];
           querySnapshot.forEach(function(doc) {
-            if ((doc.data().sender == $scope.sender || doc.data().receiver == $scope.sender)&&
-            (doc.data().sender == $scope.receiver || doc.data().receiver == $scope.receiver)
+            if (
+              (doc.data().sender == $scope.sender ||
+                doc.data().receiver == $scope.sender) &&
+              (doc.data().sender == $scope.receiver ||
+                doc.data().receiver == $scope.receiver)
             )
-             $scope.posts.push(doc.data());
+              $scope.posts.push(doc.data());
           });
           $scope.$apply(function() {
             $scope.posts = $scope.posts;
@@ -45,8 +47,11 @@
         });
     });
 
+    $scope.isSelected = function(section) {
+      return $scope.selected === section;
+    };
+
     $scope.postData = () => {
-      
       let current_datetime = new Date();
       let formatted_date =
         current_datetime.getFullYear() +
@@ -69,17 +74,17 @@
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           currentDate: formatted_date
         });
-        $scope.post=''
+      $scope.post = "";
     };
 
- 
     $scope.sendPost = event => {
       if (event.keyCode === 13) $scope.postData();
     };
 
-    $scope.startContact = (user_id,name) => {
+    $scope.startContact = (user_id, name) => {
+      $scope.selected = user_id;
       $scope.receiver = user_id;
-      $scope.name=name
+      $scope.name = name;
     };
 
     $scope.signOut = () => {

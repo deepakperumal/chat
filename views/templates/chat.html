@@ -28,8 +28,10 @@
           class=" "
           ng-repeat="user in users"
           ng-click="startContact(user.user_id,user.name)"
+
+         
         >
-          <div class="user-cont" ng-if="user.name && user.user_id!=sender">
+          <div  ng-class="{active : isSelected(user.user_id)}" class="user-cont" ng-if="user.name && user.user_id!=sender">
             <img src="images/user.png" class="user-default" />
             <div class="details-wrap">{{user.name}}</div>
             <div class="details-wrap email-txt">{{user.email}}</div>
