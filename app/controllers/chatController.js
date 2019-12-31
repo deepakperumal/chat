@@ -5,11 +5,11 @@
 
   function MainController($scope, storageService, $state) {
     $scope.sender = storageService.getItem("user_id");
-
     if (!$scope.sender) $state.go("login");
-
     var db = firebase.firestore();
     $scope.receiver = "";
+
+
     /* Watch users data  */
 
     db.collection("users").onSnapshot(function(querySnapshot) {
@@ -26,22 +26,18 @@
 
     $scope.$watch("receiver", function() {
       db.collection("posts")
-        .where("sender", "in", [$scope.sender, $scope.receiver])
         .orderBy("timestamp")
         .onSnapshot(function(querySnapshot) {
           $scope.posts = [];
           querySnapshot.forEach(function(doc) {
-            if (
-              doc.data().sender == $scope.sender &&
-              doc.data().receiver != $scope.receiver
+            if ((doc.data().sender == $scope.sender || doc.data().receiver == $scope.sender)&&
+            (doc.data().sender == $scope.receiver || doc.data().receiver == $scope.receiver)
             )
-              $scope.posts.push({});
-            else $scope.posts.push(doc.data());
+             $scope.posts.push(doc.data());
           });
           $scope.$apply(function() {
             $scope.posts = $scope.posts;
           });
-
           setTimeout(function() {
             var elem = document.getElementById("conversation");
             elem.scrollTop = elem.scrollHeight;
@@ -73,15 +69,17 @@
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           currentDate: formatted_date
         });
-      $scope.post = "";
+        $scope.post=''
     };
 
+ 
     $scope.sendPost = event => {
       if (event.keyCode === 13) $scope.postData();
     };
 
-    $scope.startContact = user_id => {
+    $scope.startContact = (user_id,name) => {
       $scope.receiver = user_id;
+      $scope.name=name
     };
 
     $scope.signOut = () => {
