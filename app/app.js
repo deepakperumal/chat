@@ -1,5 +1,7 @@
 (function() {
-  angular.module("app", ["ui.router","cp.ngConfirm","firebase"]).config(config);
+  angular
+    .module("app", ["ui.router", "cp.ngConfirm", "firebase"])
+    .config(config);
 
   config.$inject = ["$stateProvider", "$httpProvider", "$locationProvider"];
 
@@ -20,7 +22,7 @@
       .state("chat", {
         url: "/chat",
         templateUrl: "views/templates/chat.html",
-        controller: "chatController",
+        controller: "chatController"
       });
 
     $httpProvider.interceptors.push("authInterceptor");
@@ -30,7 +32,7 @@
 
   authInterceptor.$inject = ["$q", "$location"];
 
-  function authInterceptor($q,$location) {
+  function authInterceptor($q, $location) {
     return {
       request: function(config) {
         config.headers = config.headers || {};
@@ -53,7 +55,6 @@
   run.$inject = ["$rootScope", "$location"];
 
   function run($rootScope, $location) {
-
     var firebaseConfig = {
       apiKey: "AIzaSyBdKXoCtI3fULi0s7V0WtFRMzcm_wTl5J0",
       authDomain: "webapp-5d40f.firebaseapp.com",
@@ -69,7 +70,6 @@
     firebase.auth();
     firebase.database();
     firebase.firestore();
-
-
+    firebase.storage();
   }
 })();

@@ -6,10 +6,18 @@
     "$firebaseAuth",
     "$state",
     "alertService",
-    "storageService"
+    "storageService",
+    "userService"
   ];
 
-  function MainController($scope, $firebaseAuth, $state, alertService,storageService) {
+  function MainController(
+    $scope,
+    $firebaseAuth,
+    $state,
+    alertService,
+    storageService,
+    userService
+  ) {
     $scope.user = {};
     $scope.signIn = () => {
       let email = $scope.user.email;
@@ -19,13 +27,14 @@
         auth
           .$signInWithEmailAndPassword(email, password)
           .then(function(data) {
-            storageService.setItem("user_id", data.user.uid)
+            storageService.setItem("user_id", data.user.uid);
+            userService.userStatus(data.user.uid,true);
             $state.go("chat");
           })
           .catch(function(error) {
             alertService.sendAlert("Notice", error.message, "red");
           });
-          else alertService.sendAlert("Notice", "Fields cannot be empty", "red");
+      else alertService.sendAlert("Notice", "Fields cannot be empty", "red");
     };
   }
 })();

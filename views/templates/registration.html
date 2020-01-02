@@ -1,28 +1,34 @@
 <div class="container">
-    <div class="registration-wrap" >
-      <div class="row">
-        <div class="col-md-12">
-          <p class="title-text">Sign up</p>
-        </div>
-  
-        <div class="col-md-6">
-          <input class="form-elements" placeholder="Name"  ng-model="reg.name"/>
-          <input class="form-elements" placeholder="Email" ng-model="reg.email" />
-          <input
-            class="form-elements"
-            type="password"
-            placeholder="Password"
-            ng-model="reg.password"
-          />
-          <input type="date"  class="form-elements date-inp" placeholder="DOB"  ng-model="reg.dob"/>
-  
-          <button class="reg-btn" ng-click="submitForm()">Register</button>
-        </div>
-  
-        <div class="col-md-6">
-          <img src="images/i1.jpg" class="reg-img" />
-        </div>
+  <div class="registration-wrap">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="title-text">Sign up</p>
+      </div>
+
+      <div class="col-md-6">
+        <input class="form-elements" placeholder="Name" ng-model="reg.name" />
+        <input class="form-elements" placeholder="Email" ng-model="reg.email" />
+        <input
+          class="form-elements"
+          type="password"
+          placeholder="Password"
+          ng-model="reg.password"
+        />
+        <input
+          type="date"
+          class="form-elements date-inp"
+          placeholder="DOB"
+          ng-model="reg.dob"
+        />
+
+        <input type="file"  accept="image/*" class="file-select" id="profile" />
+
+        <button class="reg-btn" ng-click="submitForm()">Register</button>
+      </div>
+
+      <div class="col-md-6">
+        <img src="images/i1.jpg" class="reg-img" />
       </div>
     </div>
   </div>
-  
+</div>

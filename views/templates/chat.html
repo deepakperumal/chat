@@ -4,11 +4,7 @@
       <div class="side-one">
         <!-- Heading -->
         <div class="row heading">
-          <div class="col-sm-3 col-3 heading-avatar">
-            <div class="heading-avatar-icon">
-              <i class="fa fa-comments fa-2x" aria-hidden="true"></i>
-            </div>
-          </div>
+          <div class="col-sm-3 col-3 heading-avatar"></div>
         </div>
         <!-- Heading End -->
 
@@ -27,14 +23,24 @@
         <div
           class=" "
           ng-repeat="user in users"
-          ng-click="startContact(user.user_id,user.name)"
-
-         
+          ng-click="startContact(user.user_id,user.name,user.url)"
         >
-          <div  ng-class="{active : isSelected(user.user_id)}" class="user-cont" ng-if="user.name && user.user_id!=sender">
-            <img src="images/user.png" class="user-default" />
-            <div class="details-wrap">{{user.name}}</div>
+          <div
+            ng-class="{active : isSelected(user.user_id)}"
+            class="user-cont"
+            ng-if="user.name && user.user_id!=sender"
+          >
+            <img src="{{user.url}}" class="user-default" />
+            <div class="details-wrap">
+              {{user.name}}
+              <i
+                class="fa fa-circle indicator"
+                ng-class="(user.online) ? 'text-success' : 'text-danger'"
+              ></i>
+            </div>
             <div class="details-wrap email-txt">{{user.email}}</div>
+
+            <p class="unread">You have received a new message</p>
           </div>
         </div>
 
@@ -53,13 +59,11 @@
       <div class="row heading" ng-if="receiver">
         <div class="col-sm-2 col-md-1 col-3 heading-avatar">
           <div class="heading-avatar-icon">
-            <img src="images/user.png" class="user-default" />
+            <img src="{{url}}" class="user-default" />
           </div>
         </div>
         <div class="col-sm-8 col-7 heading-name">
           <h5 class="user-name">{{name}}</h5>
-          <p class="status text-success">Online</p>
-          <span class="heading-online">Online</span>
         </div>
       </div>
       <!-- Heading End -->
@@ -71,6 +75,8 @@
         </div>
 
         <div class=" message-body" ng-repeat="post in posts">
+          <!--<p class="unread-divider" ng-if="post.sender==receiver && post.seen==0">------------------------------------------------     Unread Messages     ------------------------------------------------</p>-->
+
           <div
             ng-class="(post.sender==sender) ? 'sender' : 'receiver'"
             ng-if="post.post"
@@ -103,7 +109,7 @@
         </div>
         <div class="col-sm-1 col-1 reply-send">
           <i
-            class="fa fa-send fa-2x"
+           class="fa fa-send fa-2x"
             aria-hidden="true"
             ng-click="postData()"
           ></i>

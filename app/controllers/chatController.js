@@ -1,9 +1,14 @@
 (function() {
   angular.module("app").controller("chatController", MainController);
 
-  MainController.$inject = ["$scope", "storageService", "$state"];
+  MainController.$inject = [
+    "$scope",
+    "storageService",
+    "$state",
+    "userService"
+  ];
 
-  function MainController($scope, storageService, $state) {
+  function MainController($scope, storageService, $state, userService) {
     $scope.sender = storageService.getItem("user_id");
     if (!$scope.sender) $state.go("login");
     var db = firebase.firestore();
@@ -11,7 +16,7 @@
 
     /* Watch users data  */
 
-    db.collection("users").onSnapshot(function(querySnapshot) {
+    db.collection("users").orderBy('name').onSnapshot(function(querySnapshot) {
       $scope.users = [];
       querySnapshot.forEach(function(doc) {
         $scope.users.push(doc.data());
@@ -52,19 +57,25 @@
     };
 
     $scope.postData = () => {
-      let current_datetime = new Date();
-      let formatted_date =
-        current_datetime.getFullYear() +
-        "-" +
-        (current_datetime.getMonth() + 1) +
-        "-" +
-        current_datetime.getDate() +
-        " " +
-        current_datetime.getHours() +
-        ":" +
-        current_datetime.getMinutes() +
-        ":" +
-        current_datetime.getSeconds();
+      let dt = new Date();
+      let formatted_date = `${(dt.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${dt
+        .getDate()
+        .toString()
+        .padStart(2, "0")}/${dt
+        .getFullYear()
+        .toString()
+        .padStart(4, "0")} ${dt
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${dt
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}:${dt
+        .getSeconds()
+        .toString()
+        .padStart(2, "0")}`;
 
       if ($scope.receiver && $scope.post.trim())
         db.collection("posts").add({
@@ -72,7 +83,8 @@
           receiver: $scope.receiver,
           post: $scope.post,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          currentDate: formatted_date
+          currentDate: formatted_date,
+          seen: 0
         });
       $scope.post = "";
     };
@@ -81,15 +93,31 @@
       if (event.keyCode === 13) $scope.postData();
     };
 
-    $scope.startContact = (user_id, name) => {
+    $scope.startContact = (user_id, name, url) => {
       $scope.selected = user_id;
       $scope.receiver = user_id;
+      $scope.url = url;
       $scope.name = name;
     };
 
     $scope.signOut = () => {
       storageService.setItem("user_id", "");
+      userService.userStatus($scope.sender, false);
       $state.go("login");
     };
+
+    /* Users Unseen Posts */
+
+
+
+
+
+
+
+
+
+
+
+
   }
 })();
