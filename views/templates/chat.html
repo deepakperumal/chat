@@ -74,7 +74,7 @@
           <div class="col-sm-12 previous"></div>
         </div>
 
-        <div class=" message-body" ng-repeat="post in posts">
+        <div class=" message-body" ng-repeat="post in posts ">
           <!--<p class="unread-divider" ng-if="post.sender==receiver && post.seen==0">------------------------------------------------     Unread Messages     ------------------------------------------------</p>-->
 
           <div
@@ -91,7 +91,7 @@
         </div>
       </div>
       <!-- Message Box End -->
-
+<i class="fa fa-arrow-circle-down pointer"  ng-click="changeLimit()" ></i>
       <!-- Reply Box -->
       <div class="row reply">
         <div class="col-sm-1 col-1 reply-emojis">
@@ -105,7 +105,7 @@
           />
         </div>
         <div class="col-sm-1 col-1 reply-recording">
-          <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
+          <i class="fa fa-microphone fa-2x"   aria-hidden="true"></i>
         </div>
         <div class="col-sm-1 col-1 reply-send">
           <i

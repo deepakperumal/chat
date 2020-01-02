@@ -13,18 +13,26 @@
     if (!$scope.sender) $state.go("login");
     var db = firebase.firestore();
     $scope.receiver = "";
+    $scope.changeLimit = () => {
+      setTimeout(function() {
+        var elem = document.getElementById("conversation");
+        elem.scrollTop = elem.scrollHeight;
+      }, 200);
+    };
 
     /* Watch users data  */
 
-    db.collection("users").orderBy('name').onSnapshot(function(querySnapshot) {
-      $scope.users = [];
-      querySnapshot.forEach(function(doc) {
-        $scope.users.push(doc.data());
+    db.collection("users")
+      .orderBy("name")
+      .onSnapshot(function(querySnapshot) {
+        $scope.users = [];
+        querySnapshot.forEach(function(doc) {
+          $scope.users.push(doc.data());
+        });
+        $scope.$apply(function() {
+          $scope.users = $scope.users;
+        });
       });
-      $scope.$apply(function() {
-        $scope.users = $scope.users;
-      });
-    });
 
     /* Watch post data  */
 
@@ -45,10 +53,7 @@
           $scope.$apply(function() {
             $scope.posts = $scope.posts;
           });
-          setTimeout(function() {
-            var elem = document.getElementById("conversation");
-            elem.scrollTop = elem.scrollHeight;
-          }, 200);
+          $scope.changeLimit();
         });
     });
 
@@ -107,17 +112,5 @@
     };
 
     /* Users Unseen Posts */
-
-
-
-
-
-
-
-
-
-
-
-
   }
 })();
