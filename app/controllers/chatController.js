@@ -31,8 +31,36 @@
         });
         $scope.$apply(function() {
           $scope.users = $scope.users;
+          last_received_mail();
         });
       });
+
+    /* Watch Last Received */
+    let last_received_mail = () => {
+      $scope.count = {};
+      db.collection("last_received")
+        .doc($scope.sender)
+        .onSnapshot(function(querySnapshot) {
+          $scope.last_received = [];
+
+          for (d in querySnapshot.data()) {
+            $scope.last_received[d] = querySnapshot.data()[d]["post"];
+            if (!querySnapshot.data()[d]["count"]) $scope.count[d] = 0;
+            else $scope.count[d] = querySnapshot.data()[d]["count"];
+          }
+          $scope.users = $scope.users.map(x => {
+            if (!$scope.last_received[x["user_id"]])
+              $scope.last_received[x["user_id"]] = "";
+             x["received"] = $scope.last_received[x["user_id"]];
+             x["count"] = $scope.count[x["user_id"]];
+            return x;
+          });
+
+          $scope.$apply(function() {
+            $scope.users = $scope.users;
+          });
+        });
+    };
 
     /* Watch post data  */
 
@@ -91,6 +119,16 @@
           currentDate: formatted_date,
           seen: 0
         });
+      console.log($scope.count);
+      var postRef = db.collection("last_received").doc($scope.receiver);
+      var obj = {};
+      obj[$scope.sender] = {
+        post: $scope.post,
+        count: ++$scope.count[$scope.receiver]
+      };
+
+      postRef.set(obj, { merge: true });
+
       $scope.post = "";
     };
 
@@ -110,7 +148,5 @@
       userService.userStatus($scope.sender, false);
       $state.go("login");
     };
-
-    /* Users Unseen Posts */
   }
 })();
