@@ -19,6 +19,8 @@
     userService
   ) {
     $scope.user = {};
+    if(storageService.getItem("user_id"))
+    $state.go("chat");
     $scope.signIn = () => {
       let email = $scope.user.email;
       let password = $scope.user.password;
@@ -28,7 +30,7 @@
           .$signInWithEmailAndPassword(email, password)
           .then(function(data) {
             storageService.setItem("user_id", data.user.uid);
-            userService.userStatus(data.user.uid,true);
+            userService.userStatus(data.user.uid, true);
             $state.go("chat");
           })
           .catch(function(error) {

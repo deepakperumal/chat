@@ -5,10 +5,17 @@
     "$scope",
     "storageService",
     "$state",
-    "userService"
+    "userService",
+    "alertService"
   ];
 
-  function MainController($scope, storageService, $state, userService) {
+  function MainController(
+    $scope,
+    storageService,
+    $state,
+    userService,
+    alertService
+  ) {
     $scope.sender = storageService.getItem("user_id");
     if (!$scope.sender) $state.go("login");
     var db = firebase.firestore();
@@ -23,6 +30,7 @@
     /* Watch users data  */
 
     db.collection("users")
+      .where("contacts", "array-contains", $scope.sender)
       .orderBy("name")
       .onSnapshot(function(querySnapshot) {
         $scope.users = [];
@@ -45,7 +53,7 @@
 
           for (d in querySnapshot.data()) {
             $scope.last_received[d] = querySnapshot.data()[d]["post"];
-            if (!querySnapshot.data()[d]["count"]) $scope.count[d] = 0;
+            if (!querySnapshot.data()[d]["count"]) $scope.count[d] = 1;
             else $scope.count[d] = querySnapshot.data()[d]["count"];
           }
           $scope.users = $scope.users.map(x => {
@@ -124,7 +132,7 @@
       var obj = {};
       obj[$scope.sender] = {
         post: $scope.post,
-        count: ++$scope.count[$scope.receiver]
+        count: ++$scope.count[$scope.sender]
       };
 
       postRef.set(obj, { merge: true });
@@ -143,14 +151,57 @@
       $scope.name = name;
     };
 
-    $scope.addContact = user_id => {
-      alert(user_id);
+    $scope.addContact = (user_id, contact) => {
+      $scope.search = "";
+      $scope.searchResult = [];
+
+      var postRef = db.collection("users").doc(user_id);
+      let obj = {};
+      let temp = [];
+      if (contact.length != 0)
+        for (let i = 0; i < contact.length; i++) temp.push(contact[i]);
+      temp.push($scope.sender);
+      temp = [...new Set(temp)];
+      obj["contacts"] = temp;
+      postRef.set(obj, { merge: true });
+      alertService.sendAlert(
+        "Notice",
+        "User has been added to contact",
+        "green"
+      );
     };
 
     $scope.signOut = () => {
       storageService.setItem("user_id", "");
       userService.userStatus($scope.sender, false);
       $state.go("login");
+    };
+
+    let setResult = data => {
+      $scope.searchResult = data;
+      $scope.$apply(function() {
+        $scope.searchResult = $scope.searchResult;
+      });
+    };
+
+    $scope.searchUser = event => {
+      if (event.keyCode == 13) {
+        var promise = new Promise(function(resolve, reject) {
+          db.collection("users")
+            .where("name", "==", $scope.search)
+            .get()
+            .then(function(querySnapshot) {
+              let temp = [];
+              querySnapshot.forEach(function(doc) {
+                temp.push(doc.data());
+              });
+              resolve(temp);
+            });
+        });
+        promise.then(function(data) {
+          setResult(data);
+        });
+      }
     };
   }
 })();
