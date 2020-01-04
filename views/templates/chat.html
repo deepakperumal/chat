@@ -24,15 +24,21 @@
           class=" "
           ng-repeat="user in users"
           ng-click="startContact(user.user_id,user.name,user.url)"
+          ng-if="user.name && user.user_id!=sender"
         >
+
+
+<i class="fa fa-plus-circle" ng-if="isSelected(user.user_id)" ng-click="addContact(user.user_id)"></i>
+
+
           <div
             ng-class="{active : isSelected(user.user_id)}"
             class="user-cont"
-            ng-if="user.name && user.user_id!=sender"
+           
           >
             <img src="{{user.url}}" class="user-default" />
             <div class="details-wrap">
-              {{user.name}}
+              {{user.name}}<!--<span class="count" ng-if="user.count!=0">{{user.count}}</span>-->
               <i
                 class="fa fa-circle indicator"
                 ng-class="(user.online) ? 'text-success' : 'text-danger'"
@@ -41,7 +47,7 @@
           
 
             <p class="unread">
-              {{user.received}}{{user.count}}
+              {{user.received}}
             </p>
           </div>
         </div>
@@ -95,7 +101,7 @@
       <!-- Message Box End -->
 <i class="fa fa-arrow-circle-down pointer"  ng-click="changeLimit()" ></i>
       <!-- Reply Box -->
-      <div class="row reply">
+      <div class="row reply"  >
         <div class="col-sm-1 col-1 reply-emojis">
           <i class="fa fa-smile-o fa-2x"></i>
         </div>

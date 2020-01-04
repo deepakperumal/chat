@@ -50,14 +50,18 @@
             .$createUserWithEmailAndPassword(username, password)
             .then(function(data) {
               var ref = firebase.firestore();
-              ref.collection("users").doc(data.user.uid).set({
-                name: $scope.reg.name,
-                email: $scope.reg.email,
-                dob: $scope.reg.dob,
-                user_id: data.user.uid,
-                url: url,
-                online: "false"
-              });
+              ref
+                .collection("users")
+                .doc(data.user.uid)
+                .set({
+                  name: $scope.reg.name,
+                  email: $scope.reg.email,
+                  dob: $scope.reg.dob,
+                  user_id: data.user.uid,
+                  url: url,
+                  online: false,
+                  contacts: []
+                });
 
               alertService.sendAlert(
                 "Registration successful",

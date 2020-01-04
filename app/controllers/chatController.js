@@ -51,8 +51,8 @@
           $scope.users = $scope.users.map(x => {
             if (!$scope.last_received[x["user_id"]])
               $scope.last_received[x["user_id"]] = "";
-             x["received"] = $scope.last_received[x["user_id"]];
-             x["count"] = $scope.count[x["user_id"]];
+            x["received"] = $scope.last_received[x["user_id"]];
+            x["count"] = $scope.count[x["user_id"]];
             return x;
           });
 
@@ -119,7 +119,7 @@
           currentDate: formatted_date,
           seen: 0
         });
-      console.log($scope.count);
+
       var postRef = db.collection("last_received").doc($scope.receiver);
       var obj = {};
       obj[$scope.sender] = {
@@ -141,6 +141,10 @@
       $scope.receiver = user_id;
       $scope.url = url;
       $scope.name = name;
+    };
+
+    $scope.addContact = user_id => {
+      alert(user_id);
     };
 
     $scope.signOut = () => {
