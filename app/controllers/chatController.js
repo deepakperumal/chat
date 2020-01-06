@@ -53,8 +53,8 @@
 
           for (d in querySnapshot.data()) {
             $scope.last_received[d] = querySnapshot.data()[d]["post"];
-            if (!querySnapshot.data()[d]["count"]) $scope.count[d] = 1;
-            else $scope.count[d] = querySnapshot.data()[d]["count"];
+
+            $scope.count[d] = querySnapshot.data()[d]["count"];
           }
           $scope.users = $scope.users.map(x => {
             if (!$scope.last_received[x["user_id"]])
@@ -94,6 +94,19 @@
     });
 
     $scope.isSelected = function(section) {
+      if($scope.selected === section)
+      {
+        
+      var postRef = db.collection("last_received").doc($scope.sender);
+      var obj = {};
+
+      obj[$scope.receiver] = {
+        post: '',
+        count: 0
+      };
+
+      postRef.set(obj, { merge: true });
+      }
       return $scope.selected === section;
     };
 
@@ -129,13 +142,27 @@
         });
 
       var postRef = db.collection("last_received").doc($scope.receiver);
-      var obj = {};
-      obj[$scope.sender] = {
-        post: $scope.post,
-        count: ++$scope.count[$scope.sender]
-      };
+      let post = $scope.post;
+      postRef.get().then(function(doc) {
+        var obj = {};
+        if (doc.data())
+          for (d in doc.data()) {
+            if (d == $scope.sender) {
+              if (!doc.data()[d].count) doc.data()[d].count = 0;
+              obj[$scope.sender] = {
+                post: post,
+                count: ++doc.data()[d].count
+              };
+            }
+          }
+        else
+          obj[$scope.sender] = {
+            post: $scope.post,
+            count: 1
+          };
 
-      postRef.set(obj, { merge: true });
+        postRef.set(obj, { merge: true });
+      });
 
       $scope.post = "";
     };
@@ -144,17 +171,17 @@
       if (event.keyCode === 13) $scope.postData();
     };
 
-    $scope.startContact = (user_id, name, url) => {
+    $scope.startContact = (user_id, name, url, received) => {
       $scope.selected = user_id;
       $scope.receiver = user_id;
       $scope.url = url;
       $scope.name = name;
+
     };
 
     $scope.addContact = (user_id, contact) => {
       $scope.search = "";
       $scope.searchResult = [];
-
       var postRef = db.collection("users").doc(user_id);
       let obj = {};
       let temp = [];
