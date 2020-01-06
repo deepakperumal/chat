@@ -94,43 +94,22 @@
     });
 
     $scope.isSelected = function(section) {
-      if($scope.selected === section)
-      {
-        
-      var postRef = db.collection("last_received").doc($scope.sender);
-      var obj = {};
+      if ($scope.selected === section) {
+        var postRef = db.collection("last_received").doc($scope.sender);
+        var obj = {};
 
-      obj[$scope.receiver] = {
-        post: '',
-        count: 0
-      };
+        obj[$scope.receiver] = {
+          post: "",
+          count: 0
+        };
 
-      postRef.set(obj, { merge: true });
+        postRef.set(obj, { merge: true });
       }
       return $scope.selected === section;
     };
 
     $scope.postData = () => {
-      let dt = new Date();
-      let formatted_date = `${(dt.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${dt
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${dt
-        .getFullYear()
-        .toString()
-        .padStart(4, "0")} ${dt
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${dt
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}:${dt
-        .getSeconds()
-        .toString()
-        .padStart(2, "0")}`;
-
+      let formatted_date = userService.getTime();
       if ($scope.receiver && $scope.post.trim())
         db.collection("posts").add({
           sender: $scope.sender,
@@ -176,7 +155,6 @@
       $scope.receiver = user_id;
       $scope.url = url;
       $scope.name = name;
-
     };
 
     $scope.addContact = (user_id, contact) => {
