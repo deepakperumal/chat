@@ -22,11 +22,11 @@
         </div>
         <!-- Search Box End -->
 
-        <div class="contact-wrap">
+        <!--<div class="contact-wrap">
           <div
             class=" "
             ng-repeat="user in searchResult"
-            ng-click="startContact(user.user_id,user.name,user.url,'')"
+            ng-click="startContact(user.user_id,user.name,user.url,'',user.contacts)"
             ng-if="user.name && user.user_id!=sender"
           >
             <i
@@ -37,7 +37,7 @@
             <div class="user-cont">
               <img src="{{user.url}}" class="user-default" />
               <div class="details-wrap">
-                {{user.name}}<!--<span class="count" ng-if="user.count!=0">{{user.count}}</span>-->
+                {{user.name}}<span class="count" ng-if="user.count!=0">{{user.count}}</span>
               </div>
               <p class="unread">
                   {{user.email}}
@@ -45,15 +45,28 @@
             </div>
           </div>
         </div>
-
+-->
         <!-- sideBar -->
 
+        <button id="myBtn">Open Modal</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>
+
         <div class="contact-wrap">
-          <div class="heading-contact">Contacts</div>
+          <div class="heading-contact">Users</div>
           <div
             class=" "
             ng-repeat="user in users"
-            ng-click="startContact(user.user_id,user.name,user.url,user.received)"
+            ng-click="startContact(user.user_id,user.name,user.url,user.received,user.contacts)"
             ng-if="user.name && user.user_id!=sender"
           >
             <i
@@ -86,6 +99,7 @@
     <!-- New Message Sidebar End -->
     <!-- Conversation Start -->
     <div class="col-sm-9 conversation">
+      
       <!-- Heading -->
       <button class="sign-out" ng-click="signOut()">Log Out</button>
       <div class="row heading" ng-if="receiver">
@@ -131,6 +145,7 @@
             class="chat-inp"
             ng-model="post"
             ng-keypress="sendPost($event)"
+            
           />
         </div>
         <div class="col-sm-1 col-1 reply-recording">
@@ -149,4 +164,11 @@
     <!-- Conversation End -->
   </div>
   <!-- App One End -->
+
+
+
+
+
+
+  
 </div>

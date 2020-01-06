@@ -56,14 +56,14 @@
 
   function run($rootScope, $location) {
     var firebaseConfig = {
-      apiKey: "AIzaSyBdKXoCtI3fULi0s7V0WtFRMzcm_wTl5J0",
-      authDomain: "webapp-5d40f.firebaseapp.com",
-      databaseURL: "https://webapp-5d40f.firebaseio.com",
-      projectId: "webapp-5d40f",
-      storageBucket: "webapp-5d40f.appspot.com",
-      messagingSenderId: "963884867488",
-      appId: "1:963884867488:web:4a46036404d8df4b6d4ec5",
-      measurementId: "G-5NTNQ3T04E"
+      apiKey: "AIzaSyD_C2M20G73VS7L6jg5gU0dQdhv-feU_1M",
+    authDomain: "chat-dadb8.firebaseapp.com",
+    databaseURL: "https://chat-dadb8.firebaseio.com",
+    projectId: "chat-dadb8",
+    storageBucket: "chat-dadb8.appspot.com",
+    messagingSenderId: "64594912113",
+    appId: "1:64594912113:web:f34839b85e5386cf99ccd0",
+    measurementId: "G-G80GP7QGE1"
     };
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();

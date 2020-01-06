@@ -30,7 +30,6 @@
     /* Watch users data  */
 
     db.collection("users")
-      .where("contacts", "array-contains", $scope.sender)
       .orderBy("name")
       .onSnapshot(function(querySnapshot) {
         $scope.users = [];
@@ -150,7 +149,8 @@
       if (event.keyCode === 13) $scope.postData();
     };
 
-    $scope.startContact = (user_id, name, url, received) => {
+    $scope.startContact = (user_id, name, url, received, contact) => {
+      $scope.post = "";
       $scope.selected = user_id;
       $scope.receiver = user_id;
       $scope.url = url;
@@ -183,29 +183,46 @@
     };
 
     let setResult = data => {
-      $scope.searchResult = data;
+      $scope.users = data;
       $scope.$apply(function() {
-        $scope.searchResult = $scope.searchResult;
+        $scope.users = $scope.users;
       });
     };
 
     $scope.searchUser = event => {
       if (event.keyCode == 13) {
         var promise = new Promise(function(resolve, reject) {
-          db.collection("users")
-            .where("name", "==", $scope.search)
-            .get()
-            .then(function(querySnapshot) {
-              let temp = [];
-              querySnapshot.forEach(function(doc) {
-                temp.push(doc.data());
-              });
-              resolve(temp);
+          var ref = db.collection("users").where("name", "==", $scope.search);
+          if (!$scope.search) ref = db.collection("users");
+
+          ref.get().then(function(querySnapshot) {
+            let temp = [];
+            querySnapshot.forEach(function(doc) {
+              temp.push(doc.data());
             });
+            resolve(temp);
+          });
         });
         promise.then(function(data) {
           setResult(data);
         });
+      }
+    };
+
+    /* Function for model */
+
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+      modal.style.display = "block";
+    };
+    span.onclick = function() {
+      modal.style.display = "none";
+    };
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
       }
     };
   }
