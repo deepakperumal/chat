@@ -38,12 +38,12 @@
         });
         $scope.$apply(function() {
           $scope.users = $scope.users;
-          last_received_mail();
+          lastReceivedMail();
         });
       });
 
     /* Watch Last Received */
-    let last_received_mail = () => {
+    let lastReceivedMail = () => {
       $scope.count = {};
       db.collection("last_received")
         .doc($scope.sender)

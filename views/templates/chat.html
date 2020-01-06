@@ -48,7 +48,7 @@
 -->
         <!-- sideBar -->
 
-        <button id="myBtn">Open Modal</button>
+        <button id="myBtn">Redirect To Group Chat</button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -56,7 +56,13 @@
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
+    <div class="group-info-wrap">
+
+        <input class="grp-name" ng-model="group-name">
+        <button class="addGroup">Create</button>
+
+    </div>
+   
   </div>
 
 </div>
