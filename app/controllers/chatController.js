@@ -49,10 +49,8 @@
         .doc($scope.sender)
         .onSnapshot(function(querySnapshot) {
           $scope.last_received = [];
-
           for (d in querySnapshot.data()) {
             $scope.last_received[d] = querySnapshot.data()[d]["post"];
-
             $scope.count[d] = querySnapshot.data()[d]["count"];
           }
           $scope.users = $scope.users.map(x => {
