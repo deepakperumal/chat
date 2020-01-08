@@ -1,10 +1,26 @@
 (function() {
 	angular.module('app').controller('chatController', MainController);
 
-	MainController.$inject = ['$scope', 'storageService', '$state', 'userService', 'alertService'];
+	MainController.$inject = [
+		'$scope',
+		'storageService',
+		'$state',
+		'userService',
+		'alertService',
+		'dateService',
+		'$q',
+	];
 
-	function MainController($scope, storageService, $state, userService, alertService) {
-		$scope.sender = storageService.getItem('user_id');
+	function MainController(
+		$scope,
+		storageService,
+		$state,
+		userService,
+		alertService,
+		dateService,
+		$q
+	) {
+		$scope.sender = storageService.getItem('userId');
 		if (!$scope.sender) $state.go('login'); // Redirect if user not logged in
 		var db = firebase.firestore(); // Fire-store  DB call
 		$scope.receiver = '';
@@ -17,8 +33,15 @@
 			.onSnapshot(querySnapshot => {
 				$scope.$apply(() => {
 					$scope.users = [];
-					// Use Map
 					querySnapshot.docs.map(doc => {
+						if ($scope.selected === doc.data().user_id) {
+							if ($scope.onlineStatus && !doc.data().online) {
+								$scope.lastVisited = dateService.getTime();
+								$scope.onlineStatus = false;
+							} else {
+								$scope.onlineStatus = true;
+							}
+						}
 						$scope.users.push(doc.data());
 					});
 					lastReceivedMail();
@@ -32,23 +55,22 @@
 			db.collection('last_received')
 				.doc($scope.sender)
 				.onSnapshot(querySnapshot => {
-					$scope.last_received = [];
+					$scope.lastReceived = [];
 					for (d in querySnapshot.data()) {
-						$scope.last_received[d] = querySnapshot.data()[d]['post'];
+						$scope.lastReceived[d] = querySnapshot.data()[d]['post'];
 						$scope.count[d] = querySnapshot.data()[d]['count'];
 					}
 					$scope.users = $scope.users.map(x => {
-						if (!$scope.last_received[x['user_id']]) $scope.last_received[x['user_id']] = '';
-						x['received'] = $scope.last_received[x['user_id']];
+						if (!$scope.lastReceived[x['user_id']]) $scope.lastReceived[x['user_id']] = '';
+						x['received'] = $scope.lastReceived[x['user_id']];
 						x['count'] = $scope.count[x['user_id']];
 						return x;
 					});
 					$scope.$apply(() => {
 						$scope.users = $scope.users;
-            $scope.users.sort(function(a, b){
-              return b.count-a.count
-            })
-						console.log($scope.users);
+						$scope.users.sort(function(a, b) {
+							return b.count - a.count;
+						});
 
 						if (!$scope.receiver) {
 							$scope.receiver = $scope.users[0].user_id;
@@ -86,7 +108,6 @@
 				var postRef = db.collection('last_received').doc($scope.sender);
 				var obj = {};
 				obj[$scope.receiver] = {
-					post: '',
 					count: 0,
 				};
 				postRef.set(obj, { merge: true });
@@ -95,7 +116,7 @@
 		};
 
 		$scope.postData = () => {
-			let formatted_date = userService.getTime();
+			let formatted_date = dateService.getTime();
 			if ($scope.receiver && $scope.post.trim())
 				db.collection('posts').add({
 					sender: $scope.sender,
@@ -136,18 +157,44 @@
 			if (event.keyCode === 13) $scope.postData();
 		};
 
-		$scope.startContact = (user_id, name, url, received, contact) => {
-			$scope.post = '';
-			$scope.selected = user_id;
-			$scope.receiver = user_id;
-			$scope.url = url;
-			$scope.name = name;
+		let checkAvailability = userId => {
+			let temp = [];
+
+			var ref = db.collection('users').where('user_id', '==', $scope.sender);
+			ref.get().then(querySnapshot => {
+				querySnapshot.docs.map(doc => {
+					temp.push(doc.data()['contacts']);
+				});
+				console.log(temp);
+				
+			});
+
+		 return true
 		};
 
-		$scope.addContact = (user_id, contact) => {
+		$scope.startContact = (userId, name, url, received, contact, status) => {
+			if (!checkAvailability(userId)) {
+				return false;
+			}
+
+			if (!status) {
+				alertService.sendAlert('Notice', 'User must be added to contact before chat ', 'red');
+				return;
+			}
+
+			$scope.post = '';
+			$scope.selected = userId;
+			$scope.receiver = userId;
+			$scope.url = url;
+			$scope.lastVisited = contact;
+			$scope.name = name;
+			$scope.onlineStatus = received;
+		};
+
+		$scope.addContact = (userId, contact) => {
 			$scope.search = '';
 			$scope.searchResult = [];
-			var postRef = db.collection('users').doc(user_id);
+			var postRef = db.collection('users').doc(userId);
 			let obj = {};
 			let temp = [];
 			if (contact.length != 0) for (let i = 0; i < contact.length; i++) temp.push(contact[i]);
@@ -159,12 +206,12 @@
 		};
 
 		$scope.signOut = () => {
-			storageService.setItem('user_id', '');
+			storageService.setItem('userId', '');
 			userService.userStatus($scope.sender, false);
 			$state.go('login');
 		};
 
-		let setResult = data => {
+		let setResult = (data, status) => {
 			$scope.searchResult = data;
 			$scope.$apply(() => {
 				$scope.searchResult = $scope.searchResult;
@@ -195,7 +242,7 @@
 					});
 				});
 				promise.then(data => {
-					setResult(data);
+					setResult(data, 0);
 				});
 			}
 		};

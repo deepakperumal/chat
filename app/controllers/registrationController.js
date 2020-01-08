@@ -60,7 +60,8 @@
                   user_id: data.user.uid,
                   url: url,
                   online: false,
-                  contacts: []
+                  contacts: [],
+                  last_seen:''
                 });
 
               alertService.sendAlert(

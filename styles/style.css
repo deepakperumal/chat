@@ -2541,7 +2541,12 @@ i.fa.fa-comments.fa-2x {
   padding: 6px;
   color: #fff;
 }
-
+.online-status {
+  font-size: 13px;
+  margin-top: -6px;
+  margin-left: -14px;
+ 
+}
 
 .count {
   /* border: 1px solid #3cafff; */

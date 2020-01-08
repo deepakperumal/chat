@@ -25,7 +25,7 @@
 					<div
 						class=" "
 						ng-repeat="user in searchResult"
-						ng-click="startContact(user.user_id,user.name,user.url,'',user.contacts)"
+						ng-click="startContact(user.user_id,user.name,user.url,'',user.online,user.contacts.includes(sender))"
 						ng-if="user.name && user.user_id!=sender"
 					>
 						<i
@@ -46,11 +46,11 @@
 				</div>
 
 				<div class="contact-wrap">
-					<div class="heading-contact">Users</div>
+					<div class="heading-contact">Contacts</div>
 					<div
 						class=" "
 						ng-repeat="user in users"
-						ng-click="startContact(user.user_id,user.name,user.url,user.received,user.contacts)"
+						ng-click="startContact(user.user_id,user.name,user.url,user.online,user.last_seen,1)"
 						ng-if="user.name && user.user_id!=sender"
 					>
 						<div ng-class="{active : isSelected(user.user_id)}" class="user-cont">
@@ -64,9 +64,10 @@
 									ng-class="(user.online) ? 'text-success' : 'text-danger'"
 								></i>
 							</div>
-							<p class="unread">
+							<p class="unread"  >
 								{{user.received}}
-							</p>
+              </p>
+              <p ng-if="!user.online && user.last_seen && user.online"><span class="text-danger">Last Seen : </span>{{user.last_seen}}</p>
 						</div>
 					</div>
 				</div>
@@ -87,7 +88,8 @@
 					</div>
 				</div>
 				<div class="col-sm-8 col-7 heading-name">
-					<h5 class="user-name">{{name}}</h5>
+          <h5 class="user-name">{{name}}</h5>
+          <p ng-if="lastVisited && !onlineStatus   " class="online-status"><span class="text-danger">Last Seen : </span>{{lastVisited}}</p>
 				</div>
 			</div>
 			<!-- Heading End -->
