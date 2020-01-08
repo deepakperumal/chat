@@ -28,12 +28,12 @@
       if (email && password)
         auth
           .$signInWithEmailAndPassword(email, password)
-          .then(function(data) {
+          .then((data)=> {
             storageService.setItem("user_id", data.user.uid);
             userService.userStatus(data.user.uid, true);
             $state.go("chat");
           })
-          .catch(function(error) {
+          .catch((error)=> {
             alertService.sendAlert("Notice", error.message, "red");
           });
       else alertService.sendAlert("Notice", "Fields cannot be empty", "red");

@@ -71,7 +71,7 @@
 
               $state.go("login");
             })
-            .catch(function(error) {
+            .catch((error)=> {
               alertService.sendAlert("Notice", error.message, "red");
               $scope.errMsg = true;
               $scope.errorMessage = error.message;

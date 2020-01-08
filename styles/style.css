@@ -2514,7 +2514,33 @@ i.fa.fa-comments.fa-2x {
   margin-right: 14px;
   letter-spacing: 1.4px;
 }
+.group-info-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 21%;
+}
+.addGroup {
+  margin-top: 12px;
+  padding: 4px;
+}
 
+.close {
+  margin-bottom: 5px;
+  border: 1px solid gray;
+  width: 28px;
+  text-align: center;
+  border-radius: 15px;
+}
+
+.addGroup {
+  background: #54b0ff;
+  border: none;
+  font-size: 14px;
+  text-align: center;
+  padding: 6px;
+  color: #fff;
+}
 
 
 .count {
