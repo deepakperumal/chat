@@ -50,22 +50,17 @@
 
         <button id="myBtn">Redirect To Group Chat</button>
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <div class="group-info-wrap">
-
-        <input class="grp-name" ng-model="group-name">
-        <button class="addGroup">Create</button>
-
-    </div>
-   
-  </div>
-
-</div>
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="group-info-wrap">
+              <input class="grp-name" ng-model="groupName" />
+              <button class="addGroup">Create</button>
+            </div>
+          </div>
+        </div>
 
         <div class="contact-wrap">
           <div class="heading-contact">Users</div>
@@ -86,7 +81,11 @@
             >
               <img src="{{user.url}}" class="user-default" />
               <div class="details-wrap">
-                {{user.name}}<span class="count" ng-if="user.count>0 && !isSelected(user.user_id)">{{user.count}}</span>
+                {{user.name}}<span
+                  class="count"
+                  ng-if="user.count>0 && !isSelected(user.user_id)"
+                  >{{user.count}}</span
+                >
                 <i
                   class="fa fa-circle indicator"
                   ng-class="(user.online) ? 'text-success' : 'text-danger'"
@@ -105,7 +104,6 @@
     <!-- New Message Sidebar End -->
     <!-- Conversation Start -->
     <div class="col-sm-9 conversation">
-      
       <!-- Heading -->
       <button class="sign-out" ng-click="signOut()">Log Out</button>
       <div class="row heading" ng-if="receiver">
@@ -151,7 +149,6 @@
             class="chat-inp"
             ng-model="post"
             ng-keypress="sendPost($event)"
-            
           />
         </div>
         <div class="col-sm-1 col-1 reply-recording">
@@ -170,11 +167,4 @@
     <!-- Conversation End -->
   </div>
   <!-- App One End -->
-
-
-
-
-
-
-  
 </div>
