@@ -28,11 +28,13 @@
 						ng-click="startContact(user.user_id,user.name,user.url,'',user.online,user.contacts.includes(sender))"
 						ng-if="user.name && user.user_id!=sender"
 					>
-						<i
+						<!--<i
 							class="fa fa-plus  search-add"
 							ng-if="!user.contacts.includes(sender)"
 							ng-click="addContact(user.user_id,user.contacts)"
-						></i>
+            ></i>-->
+            
+            <button ng-if="!user.contacts.includes(sender)">Send Req</button>
 						<div class="user-cont">
 							<img src="{{user.url}}" class="user-default" />
 							<div class="details-wrap">

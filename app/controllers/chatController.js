@@ -8,18 +8,9 @@
 		'userService',
 		'alertService',
 		'dateService',
-		'$q',
 	];
 
-	function MainController(
-		$scope,
-		storageService,
-		$state,
-		userService,
-		alertService,
-		dateService,
-		$q
-	) {
+	function MainController($scope, storageService, $state, userService, alertService, dateService) {
 		$scope.sender = storageService.getItem('userId');
 		if (!$scope.sender) $state.go('login'); // Redirect if user not logged in
 		var db = firebase.firestore(); // Fire-store  DB call
@@ -157,26 +148,10 @@
 			if (event.keyCode === 13) $scope.postData();
 		};
 
-		let checkAvailability = userId => {
-			let temp = [];
-
-			var ref = db.collection('users').where('user_id', '==', $scope.sender);
-			ref.get().then(querySnapshot => {
-				querySnapshot.docs.map(doc => {
-					temp.push(doc.data()['contacts']);
-				});
-				console.log(temp);
-				
-			});
-
-		 return true
-		};
-
 		$scope.startContact = (userId, name, url, received, contact, status) => {
-			if (!checkAvailability(userId)) {
-				return false;
-			}
 
+      
+ 
 			if (!status) {
 				alertService.sendAlert('Notice', 'User must be added to contact before chat ', 'red');
 				return;
@@ -211,7 +186,7 @@
 			$state.go('login');
 		};
 
-		let setResult = (data, status) => {
+		let setResult = data => {
 			$scope.searchResult = data;
 			$scope.$apply(() => {
 				$scope.searchResult = $scope.searchResult;
@@ -242,7 +217,7 @@
 					});
 				});
 				promise.then(data => {
-					setResult(data, 0);
+					setResult(data);
 				});
 			}
 		};
