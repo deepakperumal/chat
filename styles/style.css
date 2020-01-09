@@ -1408,10 +1408,10 @@ html {
 	scroll-behavior: smooth;
 }
 .indicator {
-	font-size: 13px !important;
-	margin-top: 5px;
-	position: absolute;
-	left: 24px;
+  font-size: 13px !important;
+  margin-top: 5px;
+  position: relative;
+  left: -91px;
 }
 .reply {
 	height: 60px;
@@ -2656,7 +2656,10 @@ i.fa.fa-paper-plane.request.ng-scope {
 }
 
 .contact-wrap {
-	padding: 12px;
+  padding: 12px;
+  max-height: 442px;
+  overflow-y: scroll;
+
 }
 .message-previous {
 	margin: 0 !important;
