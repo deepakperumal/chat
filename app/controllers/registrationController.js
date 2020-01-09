@@ -61,7 +61,8 @@
                   url: url,
                   online: false,
                   contacts: [],
-                  last_seen:''
+                  last_seen:'',
+                  requests:''
                 });
 
               alertService.sendAlert(

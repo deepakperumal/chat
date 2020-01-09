@@ -46,19 +46,19 @@
 			db.collection('last_received')
 				.doc($scope.sender)
 				.onSnapshot(querySnapshot => {
-					$scope.lastReceived = [];
-					for (d in querySnapshot.data()) {
-						$scope.lastReceived[d] = querySnapshot.data()[d]['post'];
-						$scope.count[d] = querySnapshot.data()[d]['count'];
-					}
-					$scope.users = $scope.users.map(x => {
-						if (!$scope.lastReceived[x['user_id']]) $scope.lastReceived[x['user_id']] = '';
-						x['received'] = $scope.lastReceived[x['user_id']];
-						x['count'] = $scope.count[x['user_id']];
-						return x;
-					});
 					$scope.$apply(() => {
-						$scope.users = $scope.users;
+						$scope.lastReceived = [];
+						for (d in querySnapshot.data()) {
+							$scope.lastReceived[d] = querySnapshot.data()[d]['post'];
+							$scope.count[d] = querySnapshot.data()[d]['count'];
+						}
+						$scope.users = $scope.users.map(x => {
+							if (!$scope.lastReceived[x['user_id']]) $scope.lastReceived[x['user_id']] = '';
+							x['received'] = $scope.lastReceived[x['user_id']];
+							x['count'] = $scope.count[x['user_id']];
+							return x;
+						});
+
 						$scope.users.sort(function(a, b) {
 							return b.count - a.count;
 						});
@@ -79,16 +79,15 @@
 			db.collection('posts')
 				.orderBy('timestamp')
 				.onSnapshot(querySnapshot => {
-					$scope.posts = [];
-					querySnapshot.docs.map(doc => {
-						if (
-							(doc.data().sender == $scope.sender || doc.data().receiver == $scope.sender) &&
-							(doc.data().sender == $scope.receiver || doc.data().receiver == $scope.receiver)
-						)
-							$scope.posts.push(doc.data());
-					});
 					$scope.$apply(() => {
-						$scope.posts = $scope.posts;
+						$scope.posts = [];
+						querySnapshot.docs.map(doc => {
+							if (
+								(doc.data().sender == $scope.sender || doc.data().receiver == $scope.sender) &&
+								(doc.data().sender == $scope.receiver || doc.data().receiver == $scope.receiver)
+							)
+								$scope.posts.push(doc.data());
+						});
 					});
 					$scope.changeLimit();
 				});
@@ -144,19 +143,65 @@
 			$scope.post = '';
 		};
 
+		/* Watch current users data  */
+
+		db.collection('users')
+			.where('user_id', '==', $scope.sender)
+			.onSnapshot(querySnapshot => {
+				$scope.$apply(() => {
+					$scope.currentUser = [];
+					querySnapshot.docs.map(doc => {
+						$scope.currentUser.push(doc.data());
+					});
+				});
+			});
+
+		$scope.sendRequest = (receiver_id, requests) => {
+			var postRef = db.collection('users').doc(receiver_id);
+			var obj = {};
+			let res = [];
+			if (requests.length > 0)
+				for (var i = 0; i < requests.length; i++) {
+					if (requests[i].user_id === $scope.currentUser[0].user_id) {
+						alertService.sendAlert('Notice', 'Request already sent', 'red');
+						return;
+					}
+					res.push(requests[i]);
+				}
+
+			res.push($scope.currentUser[0]);
+			obj['requests'] = res;
+			postRef.set(obj, { merge: true });
+			$scope.search = '';
+			$scope.searchResult = [];
+			alertService.sendAlert('Notice', 'Request has been sent ', 'green');
+		};
+
+		$scope.rejectRequest = user_id => {
+			let requests = $scope.currentUser[0].requests.filter(x => {
+				return x.user_id != user_id;
+			});
+
+			var postRef = db.collection('users').doc($scope.sender);
+			var obj = {};
+
+			obj['requests'] = requests;
+			postRef.set(obj, { merge: true });
+
+			//alertService.sendAlert('Notice', 'Request has been rejected ', 'purple');
+		};
+
 		$scope.sendPost = event => {
-			if (event.keyCode === 13) $scope.postData();
+			if (event.keyCode === 13) {
+				$scope.postData();
+			}
 		};
 
 		$scope.startContact = (userId, name, url, received, contact, status) => {
-
-      
- 
 			if (!status) {
-				alertService.sendAlert('Notice', 'User must be added to contact before chat ', 'red');
+				//alertService.sendAlert('Notice', 'User must be added to contact before chat ', 'red');
 				return;
 			}
-
 			$scope.post = '';
 			$scope.selected = userId;
 			$scope.receiver = userId;
@@ -191,6 +236,30 @@
 			$scope.$apply(() => {
 				$scope.searchResult = $scope.searchResult;
 			});
+		};
+
+		$scope.acceptRequest = (user_id, contacts) => {
+			$scope.rejectRequest(user_id);
+			let temp = [];
+			if (contacts.length > 0) for (var i = 0; i < contacts.length; i++) temp.push(contacts[i]);
+			temp.push($scope.sender);
+
+			var postRef = db.collection('users').doc(user_id);
+			var obj = {};
+			obj['contacts'] = temp;
+			postRef.set(obj, { merge: true });
+
+			let receiver = [];
+			if ($scope.currentUser[0].contacts.length > 0)
+				for (var i = 0; i < $scope.currentUser[0].contacts.length; i++)
+					receiver.push($scope.currentUser[0].contacts[i]);
+			receiver.push(user_id);
+
+			var postRef = db.collection('users').doc($scope.sender);
+			var obj = {};
+			obj['contacts'] = receiver;
+			postRef.set(obj, { merge: true });
+			//console.log($scope.currentUser[0].contacts)
 		};
 
 		/*--------------------------------------------------------------------------------*/
