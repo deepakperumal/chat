@@ -66,6 +66,6 @@
     "angularfire": "^2.3.0",
     "bootstrap": "^4.4.1",
     "gulp-sass": "^3.2.1",
-    "jquery": "^3.4.1"
+    "jquery": "^3.5.0"
   }
 }
